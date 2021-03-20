@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="shortcut icon"
+      href="MySacco_200x200.png"
+      type="image/x-icon"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0,shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha256-Ww++W3rXBfapN8SZitAvc9jw2Xb+Ixt0rvDsmWmQyTo="
+      crossorigin="anonymous"
+    />
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"
+      integrity="sha256-m5Awq0wGGRCO7AtN92mhhdGt+TJC70hTou7/t5M11WY="
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="home.css" />
+    <link rel="stylesheet" href="main.css" />
+
+    <title>MySacco :: Admin</title>
+     <style>
+        .sidebar {
+          background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)),
+            url(dash.jpg);
+          background-repeat: no-repeat;
+          background-position: center;
+          height: 100vh;
+          background-size: cover;
+          box-shadow: 5px 7px 25px #999;
+        }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-light">
+      <button
+        class="navbar-toggler ml-auto mb-2 bg-light"
+        type="button"
+        data-toggle="collapse"
+        data-target="#myNavbar"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <div class="container-fluid">
+          <div class="row">
+            <!-- Sidebar -->
+            <div class="col-xl-2 col-lg-3 col-md-4 sidebar fixed-top">
+              <a
+                href=""
+                class="navbar-brand text-white d-block text-center py-3 mx-auto mb-4 border-bottom"
+                >MySacco</a
+              >
+              <div class="border-bottom pb-3">
+                <img
+                  src="save.png"
+                  width="50"
+                  height="50"
+                  class="rounded-circle mr-3"
+                />
+                <span class="text-white">MySacco - Admin</span>
+              </div>
+              <ul class="navbar-nav flex-column mt-4">
+                <li class="nav-item">
+                  <a href="/admin/index" class="nav-link text-white p-3 mb-2"
+                    ><i class="fas fa-home text-light fa-lg mr-3"></i>Home</a
+                  >
+                </li>
+
+                <li class="nav-item">
+                  <a href="admin/saccos" class="nav-link text-white p-3 mb-2"
+                    ><i class="fas fa-shopping-cart text-light fa-lg mr-3"></i
+                    >Saccos</a
+                  >
+                </li>
+                <li class="nav-item current">
+                  <a
+                    href="/admin/pending-saccos"
+                    class="nav-link text-white p-3 mb-2"
+                    ><i class="fas fa-wrench text-light fa-lg mr-3"></i
+                    >pending</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <!-- End Sidebar -->
+
+            <!-- Topnavbar -->
+            <div
+              class="col-xl-10 col-lg-9 col-md-8 bg-dark ml-auto fixed-top py-2 top-navbar"
+            >
+              <div class="row align-items">
+                <div class="col-md-4 mb-0 text-light py-3 text-uppercase">
+                  <h4 style="display: inline">Saccos</h4>
+                </div>
+                <div class="col-md-5"></div>
+                <div class="col-md-3 py-2">
+                  <ul class="navbar-nav">
+                    <li class="list-item icon-parent text-white">
+                      <span class="time text-white">Time: 13:04:12</span>
+                    </li>
+                    <li class="list-item ml-md-auto">
+                      <a
+                        href="#"
+                        class="nav-link"
+                        data-target="#sign-out"
+                        data-toggle="modal"
+                        ><i class="fas fa-power-off text-danger fa-2x"></i
+                      ></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!--End Topnavbar -->
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="sign-out">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Want to Leave?</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">Press Logout to Leave</div>
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-success">
+              Stay Here
+            </button>
+            <button type="button" id="alg" class="btn btn-danger">
+              Log Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Modal -->
+
+    <!-- Tables -->
+    <section>
+      <div class="container-fluid">
+        <div class="row mt-5">
+          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto mt-5">
+            <input
+              type="text"
+              class="form-control w-25 mb-3"
+              placeholder="Search for a sacco"
+            />
+            <table class="table table-striped bg-light text-center">
+              <thead>
+                <tr class="text-muted">
+                  <th>Sacco_ID</th>
+                  <th>Total Savings</th>
+                  <th>Interest</th>
+                  <th>Deductions</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>1</th>
+                  <td>Hakim</td>
+                  <td>UGX100,000</td>
+                  <td>23/07/2020</td>
+                  <td>
+                    <span class="badge badge-success w-75 py-2">Details</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>2</th>
+                  <td>Rodger</td>
+                  <td>UGX600,000</td>
+                  <td>23/07/2020</td>
+                  <td>
+                    <span class="badge badge-success w-75 py-2">Details</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>3</th>
+                  <td>Mary</td>
+                  <td>UGX340,000</td>
+                  <td>23/07/2020</td>
+                  <td>
+                    <span class="badge badge-success w-75 py-2">Details</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>4</th>
+                  <td>Cynthia</td>
+                  <td>UGX453,000</td>
+                  <td>13/07/2020</td>
+                  <td>
+                    <span class="badge badge-success w-75 py-2">Details</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>5</th>
+                  <td>Daisy</td>
+                  <td>UGX1,000,000</td>
+                  <td>23/07/2020</td>
+                  <td>
+                    <span class="badge badge-success w-75 py-2">Details</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>6</th>
+                  <td>Emmanuel</td>
+                  <td>UGX260,000</td>
+                  <td>23/07/2020</td>
+                  <td>
+                    <span class="badge badge-success w-75 py-2">Details</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Tables -->
+    <!-- Footer -->
+    <footer>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
+            <div class="row border-top pt-3">
+              <div class="col-lg-6 text-center">
+                <ul class="list-inline">
+                  <li class="list-inline-item mr-2">
+                    <a href="#" class="text-dark">MySacco</a>
+                  </li>
+                  <li class="list-inline-item mr-2">
+                    <a href="#" class="text-dark">About</a>
+                  </li>
+                  <li class="list-inline-item mr-2">
+                    <a href="#" class="text-dark">Support</a>
+                  </li>
+                  <li class="list-inline-item mr-2">
+                    <a href="#" class="text-dark">Blog</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6 text-center">
+                <p>
+                  &copy;2020 All Rights reserved
+
+                  <span class="text-success">MySacco</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
+
+    <!-- Scripts -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src=" https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <!-- End Scripts -->
+  </body>
+</html>

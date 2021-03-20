@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+body {
+  background-color: rgb(243, 243, 243);
+  font-size: 15px;
+  font-family: "Ubuntu", sans-serif;
+}
+.sacco {
+  position: relative;
+}
+a {
+  text-decoration: none;
+}
+ul {
+  list-style-type: none;
+}
+.btn {
+  color: white;
+  width: 150px;
+  height: 45px;
+  cursor: pointer;
+  outline: none;
+  border: 0px;
+  font-size: 16px;
+  border-radius: 5px;
+  background-color: #ffbb00;
+}
+.btn-sm {
+  color: white;
+  width: 120px;
+  height: 35px;
+  cursor: pointer;
+  outline: none;
+  border: 0px;
+  font-size: 15px;
+  border-radius: 5px;
+  margin: 5px;
+  background-color: #ffbb00;
+}
+.btn-main {
+  font-size: 16px;
+}
+.btn:hover {
+  opacity: 0.8;
+}
+.-bx {
+  box-shadow: 0px 0px 5px #e4e2e2;
+}
+.-is {
+  outline: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 17px;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  width: 200px;
+}
+.-is:focus {
+  border: 1px solid #ffbb00;
+  box-shadow: 0px 0px 5px #ffbb00;
+}
+.time {
+  font-size: 24px;
+  padding-top: 10px;
+}
+.mdc-button {
+  margin: 10px 5px !important;
+}

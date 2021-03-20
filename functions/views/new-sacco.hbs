@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="header.css" />
+    <title>MySacco :: Save for the Future</title>
+    <link rel="shortcut icon" href="MySacco_200x200.png" type="image/x-icon" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <style>
+        /*main*/
+        main {
+            width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .sacco-form {
+            width: 768px;
+            margin: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .-progress {
+            width: 250px;
+            margin: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: fit-content;
+            position: sticky;
+            top: 110px;
+        }
+
+        .-progress>ul {
+            height: 50px;
+            width: 100%;
+            margin-bottom: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 0px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .-hform {
+            width: 100%;
+            font-size: 24px;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 15px;
+        }
+
+        .-sub-header {
+            font-size: 18px;
+            padding: 10px 20px;
+        }
+
+        .b-ctr {
+            margin: 5px 20px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .label {
+            font: 17px;
+            font-weight: 400;
+        }
+
+        /*form members*/
+        .-members {
+            width: 720px;
+        }
+
+        ._no {
+            width: 40px;
+        }
+
+        ._ph {
+            width: 175px;
+        }
+
+        .-check {
+            padding: 20px;
+            position: relative;
+        }
+
+        .checkbox {
+            position: absolute;
+            left: 5px;
+        }
+
+        .-check-text {
+            padding: 0px 10px;
+            display: inline-block;
+        }
+
+        .table-ctr {
+            overflow-x: scroll;
+        }
+
+        /*for members end*/
+        @media screen and (max-width: 768px) {
+            .-progress {
+                display: none;
+            }
+
+            .sacco-form {
+                width: 95%;
+                margin: 10px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sacco">
+        <div class="side">
+            <a href="/new-sacco" class="side-link">New Sacco</a>
+            <a href="#" class="side-link">Services</a>
+            <a href="#" class="side-link">About</a>
+            <a href="#" class="side-link">Partners &amp; Sponsers</a>
+            <a href="#" class="side-link">Help</a>
+        </div>
+        <header>
+            <div class="menu">
+                <span class="material-icons">
+                    menu
+                </span>
+            </div>
+            <nav class="nav">
+                <a href="/" class="logo">
+                    <img src="MySacco_200x200.png" alt="MYSACCO" height="100px" width="100px" />
+                </a>
+                <a href="/new-sacco" class="nav-link">New Sacco</a>
+                <a href="#" class="nav-link">Services</a>
+                <a href="#" class="nav-link">About</a>
+                <a href="#" class="nav-link">Partners &amp; Sponsers</a>
+                <a href="#" class="nav-link">Help</a>
+            </nav>
+            <a href="/login">
+                <button class="mdc-button mdc-button--raised">
+                    <span class="mdc-button__ripple"></span>
+                    <span class="mdc-button__label">Login</span>
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">navigate_next</i>
+                </button>
+            </a>
+        </header>
+        <main>
+            <form action="/api/new-sacco" class="sacco-form -bx" method="POST"
+                enctype="application/x-www-form-urlencoded" autocomplete="off">
+                <div class="-hform">Register a New Sacco</div>
+                <div class="basic-info">
+                    <h3 class="-sub-header">Sacco information:</h3>
+                    <div class="b-ctr">
+                        <label for="sn">Sacco Name:</label>
+                        <br />
+                        <input type="text" class="-is -name" name="sacco_name" required />
+                        <br />
+                        <label for="sn">Number of Members:</label>
+                        <br />
+                        <input type="number" name="members_number" class="-is" required onchange="_num(this.value)" />
+                        <br />
+                        <label for="sn">Minimum Saving(UGX):</label>
+                        <br />
+                        <input type="number" name="min_saving" class="-is" required />
+                        <br />
+                        <label for="sn">Meeting Day:</label>
+                        <br />
+                        <select class="-is" id="" name="meeting_day">
+                            <option value="" hidden>Select Day</option>
+                            <option value="Sunday">Sunday</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                        </select>
+                        <br />
+                        <label for="sn">Meeting Time:</label>
+                        <br />
+                        <input type="time" name="s_meeting_time" class="-is" required placeholder="From" />
+                        --
+                        <input type="time" name="e_meeting_time" class="-is" required placeholder="To" />
+                        <br />
+                        <label for="sn">Sacco Period(Months):</label>
+                        <br />
+                        <input type="number" name="s_period" class="-is" required />
+                    </div>
+                </div>
+                <div class="basic-info">
+                    <h3 class="-sub-header">Sacco Members:</h3>
+                    <span style="margin-left:20px"><b>NB:</b><i>The chairperson is Number 1</i></span>
+                    <div class="b-ctr table-ctr">
+                        <table class="-members">
+                            <thead>
+                                <tr class="_th">
+                                    <th class="_no">No.</th>
+                                    <th>Name</th>
+                                    <th>Email.</th>
+                                    <th>Phone No.</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tb"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="basic-info">
+                    <h3 class="-sub-header">Finish Up:</h3>
+                    <div class="b-ctr">
+                        <div class="-check">
+                            <input type="checkbox" class="checkbox" name="_check_liscence" value="true" id="_lc" />
+                            <span class="-check-text">
+                                I Agree to have read the liscence Agreement, the terms and
+                                conditions assiociated with registering a sacco with My Sacco
+                            </span>
+                        </div>
+                        <button class="mdc-button mdc-button--raised _go">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="mdc-button__label">Register</span>
+                            <i class="material-icons mdc-button__icon" aria-hidden="true">navigate_next</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="-progress">
+                <ul class="-1 -bx">
+                    <li>Your New Sacco Info.</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+    <script>
+        let _lc = document.querySelector("#_lc");
+        if (!_lc.checked) {
+            document.querySelector("._go").disabled = true;
+            document.querySelector("._go").style.opacity = "0.6";
+        }
+        _lc.addEventListener("change", (e) => {
+            if (_lc.checked) {
+                document.querySelector("._go").disabled = false;
+                document.querySelector("._go").style.opacity = "1";
+            } else {
+                document.querySelector("._go").disabled = true;
+                document.querySelector("._go").style.opacity = "0.6";
+            }
+        });
+        function _num(l) {
+            l = parseInt(l);
+            let rows = "";
+            for (let i = 1; i <= l; i++) {
+                rows += `<tr>
+                    <td class="_no">
+                      <input
+                        type="text"
+                        class="-is"
+                        required
+                        style="width: 95%; margin: 5px auto"
+                        value='${i}'
+                        readonly
+                        name="member_number_${i}"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="-is"
+                        required
+                        style="width: 95%; margin: 5px auto"
+                        name="member_name_${i}"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="email"
+                        class="-is"
+                        required
+                        style="width: 95%; margin: 5px auto"
+                        name="member_email_${i}"
+                      />
+                    </td>
+                    <td class="_ph">
+                      <input
+                        type="text"
+                        class="-is"
+                        required
+                        style="width: 95%; margin: 5px auto"
+                        name="member_phone_${i}"
+                      />
+                    </td>
+                  </tr>`;
+            }
+            document.querySelector(".tb").innerHTML = rows;
+        }
+    </script>
+    <script src="index.js"></script>
+</body>
+
+</html>

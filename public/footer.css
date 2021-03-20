@@ -1,0 +1,89 @@
+footer {
+  position: relative;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+}
+#comment {
+  border: 0px;
+  outline: none;
+  padding: 5px;
+  width: 250px;
+  margin: 15px 5px;
+}
+#customer-email {
+  border: 0px;
+  outline: none;
+  padding: 5px;
+  width: 250px;
+  margin: 15px 5px;
+}
+.icon-button > .fab {
+  font-size: 1.5rem;
+}
+.icon-button {
+  color: white;
+  opacity: 0.4;
+  margin-right: 10px;
+  transition: all 0.2s ease-in;
+}
+.icon-button:hover {
+  color: orange;
+}
+.footer {
+  height: 50vh;
+  margin-top: 30px;
+  padding: 25px 5px 0px 5px;
+  background-color: black;
+  display: flex;
+  justify-content: space-around;
+  color: white;
+}
+.footer-form-button {
+  padding: 5px;
+  border: 0px;
+  outline: none;
+  color: black;
+  background-color: orange;
+  opacity: 0.7;
+  font-weight: bold;
+  margin: 5px 5px;
+  border-radius: 5px;
+  transition: all 0.4s ease-in-out;
+}
+.footer-form-button:hover {
+  opacity: 0.4;
+}
+.footer-h4 {
+  opacity: 0.6;
+  /* all h4's in the footer to have the same opacity. */
+}
+.footer-list {
+  list-style-type: none;
+  padding: 2px 10px;
+}
+.footer-list > li {
+  margin-top: 10px;
+}
+.footer-list > .second-list {
+  margin-top: 10px;
+  color: white;
+  opacity: 0.6;
+}
+.footer-list > li > a {
+  color: white;
+  opacity: 0.6;
+  transition: all 0.3s ease-in;
+}
+.footer-list > li > a:hover {
+  text-decoration: none;
+  color: orange;
+}
+@media screen and (max-width: 765px) {
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+    height: fit-content;
+  }
+}
