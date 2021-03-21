@@ -10,8 +10,9 @@ app.engine("hbs", engines.handlebars);
 app.set("views", "./views");
 app.set("view engine", "hbs");
 
+//routes
 app.get("/", (req, res) => {
-  res.render("admin/index", { sacco: "sam" });
+  res.render("index", { sacco: "sam" });
 });
 app.get("/loan-request", (req, res) => {
   res.render("loan-request", { sacco: "sam" });
@@ -34,6 +35,30 @@ app.get("/login", (req, res) => {
 });
 app.get("/register", (req, res) => {
   res.render("register", { sacco: "sam" });
+});
+//routes
+
+app.get("", (req, res) => {
+  res.render("admin");
+});
+app.get("/saccos", (req, res) => {
+  res.render("saccos");
+});
+app.get("/pending-saccos", async (req, res) => {
+  let saccoSnapShot = await saccoCollection.get();
+  let pending_saccos = [];
+  saccoSnapShot.forEach((sacco) => {
+    let sacco_data = sacco.data();
+    if (
+      !Object.values(sacco_data.saccoMembers).find(
+        (member) => member.confirmed == false
+      ) &&
+      sacco_data.confirmed == false
+    ) {
+      pending_saccos.push(sacco_data);
+    }
+  });
+  res.render("pending-saccos", { pending_saccos });
 });
 
 //db stuff
@@ -70,6 +95,7 @@ app.post("/api/new-sacco", async (req, res) => {
   let saccoId = "Sacco-" + shortid.generate();
   let newSacco = {
     saccoId,
+    confirmed: false,
     saccoName: req.body.sacco_name,
     numberOfMembers: parseInt(req.body.members_number),
     minSaving: parseInt(req.body.min_saving),
@@ -128,4 +154,20 @@ app.post("/api/register", async (req, res) => {
   }
 });
 //register
+
+//admin
+app.put("/api/confirm/:id", (req, res) => {
+  try {
+    let pending_sacco = saccoCollection
+      .doc(req.params.id)
+      .update({ confirmed: true });
+    res.send("confirmed");
+  } catch (error) {
+    throw error;
+  }
+});
+//admin
+//user login
+
+//user login
 exports.app = functions.https.onRequest(app);

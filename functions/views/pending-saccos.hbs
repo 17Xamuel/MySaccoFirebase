@@ -27,17 +27,29 @@
     <link rel="stylesheet" href="main.css" />
 
     <title>MySacco :: Admin</title>
+    <script>
+      console.log(`{{pending_saccos}}`)
+    </script>
      <style>
-    .sidebar {
-      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)),
-        url(dash.jpg);
-      background-repeat: no-repeat;
-      background-position: center;
-      height: 100vh;
-      background-size: cover;
-      box-shadow: 5px 7px 25px #999;
-    }
-  </style>
+        .sidebar {
+          background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)),
+            url(dash.jpg);
+          background-repeat: no-repeat;
+          background-position: center;
+          height: 100vh;
+          background-size: cover;
+          box-shadow: 5px 7px 25px #999;
+        }
+        .current{
+          transition: all 0.3s;
+          border-radius: 5px;
+          background-color: #ffbb00;
+          box-shadow: 2px 5px 10px #111;
+        }
+        ._confirm{
+          cursor: pointer;
+        }
+    </style>
   </head>
   <body>
     <!-- Navbar -->
@@ -71,21 +83,21 @@
               </div>
               <ul class="navbar-nav flex-column mt-4">
                 <li class="nav-item">
-                  <a href="/admin/index" class="nav-link text-white p-3 mb-2"
+                  <a href="" class="nav-link text-white p-3 mb-2"
                     ><i class="fas fa-home text-light fa-lg mr-3"></i>Home</a
                   >
                 </li>
 
-                <li class="nav-item current">
-                  <a href="/admin/saccos" class="nav-link text-white p-3 mb-2"
+                <li class="nav-item">
+                  <a href="admin/saccos" class="nav-link text-white p-3 mb-2"
                     ><i class="fas fa-shopping-cart text-light fa-lg mr-3"></i
                     >Saccos</a
                   >
                 </li>
-                <li class="nav-item">
+                <li class="nav-item current">
                   <a
-                    href="/admin/pending-saccos"
-                    class="nav-link text-white p-3 mb-2"
+                    href="/pending-saccos"
+                    class="nav-link p-3 mb-1 text-white"
                     ><i class="fas fa-wrench text-light fa-lg mr-3"></i
                     >pending</a
                   >
@@ -167,67 +179,23 @@
               <thead>
                 <tr class="text-muted">
                   <th>Sacco_ID</th>
-                  <th>Total Savings</th>
-                  <th>Interest</th>
-                  <th>Deductions</th>
-                  <th></th>
+                  <th>Sacco Name</th>    
+                  <th>Members</th>
+                  <th>Meeting Day</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="has_loader">
+                {{#each pending_saccos}}
                 <tr>
-                  <th>1</th>
-                  <td>Hakim</td>
-                  <td>UGX100,000</td>
-                  <td>23/07/2020</td>
+                  <td>{{saccoId}}</td>
+                  <td>{{saccoName}}</td>
+                  <td>{{numberOfMembers}}</td> 
+                  <td>{{meetingDay}}</td>
                   <td>
-                    <span class="badge badge-success w-75 py-2">Details</span>
+                    <span data-id={{saccoId}} class="badge badge-success w-50 py-3 _confirm">Confirm</span>
                   </td>
                 </tr>
-                <tr>
-                  <th>2</th>
-                  <td>Rodger</td>
-                  <td>UGX600,000</td>
-                  <td>23/07/2020</td>
-                  <td>
-                    <span class="badge badge-success w-75 py-2">Details</span>
-                  </td>
-                </tr>
-                <tr>
-                  <th>3</th>
-                  <td>Mary</td>
-                  <td>UGX340,000</td>
-                  <td>23/07/2020</td>
-                  <td>
-                    <span class="badge badge-success w-75 py-2">Details</span>
-                  </td>
-                </tr>
-                <tr>
-                  <th>4</th>
-                  <td>Cynthia</td>
-                  <td>UGX453,000</td>
-                  <td>13/07/2020</td>
-                  <td>
-                    <span class="badge badge-success w-75 py-2">Details</span>
-                  </td>
-                </tr>
-                <tr>
-                  <th>5</th>
-                  <td>Daisy</td>
-                  <td>UGX1,000,000</td>
-                  <td>23/07/2020</td>
-                  <td>
-                    <span class="badge badge-success w-75 py-2">Details</span>
-                  </td>
-                </tr>
-                <tr>
-                  <th>6</th>
-                  <td>Emmanuel</td>
-                  <td>UGX260,000</td>
-                  <td>23/07/2020</td>
-                  <td>
-                    <span class="badge badge-success w-75 py-2">Details</span>
-                  </td>
-                </tr>
+                {{/each}}
               </tbody>
             </table>
           </div>
@@ -287,6 +255,25 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
+    <script>
+      document.querySelector('._confirm').addEventListener('click',(e)=>{
+        console.log(e.target.dataset.id);
+        let xhr = new XMLHttpRequest();
+        xhr.open('PUT',`/api/confirm/${e.target.dataset.id}`,true);
+        xhr.send();
+        xhr.onreadystatechange = ()=>{
+          if(xhr.readyState < 4){
+            document.querySelector('.has_loader').innerHTML = 
+              `<i class="fas fa-spinner fa-spin"></i>`;
+          }
+          if(xhr.readyState == 4 && xhr.status == 200){
+            if(xhr.responseText == 'confirmed'){
+              window.location.reload();
+            }
+          }
+        }
+      })
+    </script>
     <!-- End Scripts -->
   </body>
 </html>
