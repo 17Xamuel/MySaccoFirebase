@@ -39,12 +39,8 @@ app.get("/", (req, res) => {
 app.get("/loan-request", (req, res) => {
   res.render("loan-request", { sacco: "sam" });
 });
-app.get("/home/:saccoId/:user", async (req, res) => {
-  let user_sacco = await saccoCollection.doc(req.params.saccoId).get();
-  let member = user_sacco.data().saccoMembers[
-    `member_${req.body.member_number}`
-  ];
-  res.render("home", { saccoData: user_sacco.data(), member });
+app.get("/home", async (req, res) => {
+  res.render("home");
 });
 app.get("/profile", (req, res) => {
   res.render("profile", { sacco: "sam" });
@@ -206,4 +202,8 @@ app.post("/api/user/login", async (req, res) => {
   }
 });
 //user login
+
+//savings
+
+//savings
 exports.app = functions.https.onRequest(app);
