@@ -13,6 +13,11 @@
   <link rel="stylesheet" href="main.css" />
 
   <title>MySacco :: Dashboard</title>
+  <script>
+     if (document.referrer == "") {
+        self.location = "/";
+      }
+  </script>
   <style>
     .sidebar {
       background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)),
@@ -39,7 +44,7 @@
           <div class="col-xl-2 col-lg-3 col-md-4 sidebar fixed-top">
             <a href="" class="navbar-brand text-white d-block text-center py-3 mx-auto mb-4 border-bottom">MySacco</a>
             <div class="border-bottom pb-3">
-              <img src="save.png" width="50" height="50" class="rounded-circle mr-3" />
+              <i class="fas fa-user fa-3x" style="color: white;"></i>
               <a href="#" class="text-white">Hello, Xamuel</a>
             </div>
             <ul class="navbar-nav flex-column mt-4">

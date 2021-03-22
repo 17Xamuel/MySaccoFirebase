@@ -61,7 +61,13 @@
         .-w {
             width: 300px;
         }
-
+        .failed_message_s,
+        .failed_message_u,
+        .failed_message_p{
+            color: red;
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+        }
         @media screen and (max-width: 768px) {
             .sacco-form {
                 width: 95%;
@@ -111,16 +117,19 @@
                             <label for="sn">Sacco ID:</label>
                             <br />
                             <input type="text" class="-is -w" name="sacco_id" required />
+                            <div class="failed_message_s">Message goes here</div>
                         </div>
                         <div class="-i-ctr">
                             <label for="sn">Member Number:</label>
                             <br />
-                            <input type="text" class="-is -w" name="number" required />
+                            <input type="text" class="-is -w" name="member_number" required />
+                            <div class="failed_message_u">Message goes here</div>
                         </div>
                         <div class="-i-ctr">
                             <label for="sn">Password:</label>
                             <br />
                             <input type="password" class="-is -w" name="password" required />
+                            <div class="failed_message_p">Message goes here</div>
                         </div>
                         <button class="mdc-button mdc-button--raised">
                             <span class="mdc-button__ripple"></span>
@@ -146,6 +155,54 @@
         </main>
     </div>
     <script src="index.js"></script>
+    <script>
+                let loginForm = document.querySelector('#login_form');
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let formData = new FormData(loginForm);
+            let req = {};
+            formData.forEach((value, key) => {
+                req[key] = value;
+            });  
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", '/api/user/login', true);
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.send(JSON.stringify(req));
+                xhr.onreadystatechange = () => {
+                    if (xhr.status == 200 && xhr.readyState == 4) {
+                        if(xhr.responseText == 'Sacco Does Not Exist' ||
+                        xhr.responseText =="Sacco Not Confirmed"){
+                            document.querySelector('.failed_message_s').style.opacity = 
+                                '0.9';
+                            document.querySelector('.failed_message_s').innerHTML = 
+                                xhr.responseText;
+                            setTimeout(()=>{
+                            document.querySelector('.failed_message_s').style.opacity = '0';
+                            },10000)
+                        } else if(xhr.responseText == 'User Not Found'){
+                            document.querySelector('.failed_message_u').style.opacity = 
+                                '0.9';
+                            document.querySelector('.failed_message_u').innerHTML = 
+                                xhr.responseText;
+                            setTimeout(()=>{
+                            document.querySelector('.failed_message_u').style.opacity = '0';
+                            },10000)
+                        }else if(xhr.responseText == 'Wrong PassWord'){
+                            document.querySelector('.failed_message_p').style.opacity = 
+                                '0.9';
+                            document.querySelector('.failed_message_p').innerHTML = 
+                                xhr.responseText;
+                            setTimeout(()=>{
+                            document.querySelector('.failed_message_p').style.opacity = '0';
+                            },10000)
+                        }else{
+                            let res = JSON.parse(xhr.responseText);
+                            window.location.assign(`/home/${res.sacco_id}/${res.member_number}`);
+                        }
+                    }
+                }
+            });
+    </script>
 </body>
 
 </html>

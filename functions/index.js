@@ -4,11 +4,33 @@ const engines = require("consolidate");
 const admin = require("firebase-admin");
 const shortid = require("shortid");
 const nodemailer = require("nodemailer");
+const { user } = require("firebase-functions/lib/providers/auth");
+const e = require("express");
 
 const app = express();
 app.engine("hbs", engines.handlebars);
 app.set("views", "./views");
 app.set("view engine", "hbs");
+
+//db stuff
+admin.initializeApp(functions.config().firebase);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+const db = admin.firestore();
+const saccoCollection = db.collection("saccos");
+//db stuff
+//email transporter
+var transporter = nodemailer.createTransport({
+  service: "gmail",
+  host: "smtp.gmail.com",
+  auth: {
+    user: "mail.mysacco@gmail.com",
+    pass: "martha256",
+  },
+});
+//email transporter
 
 //routes
 app.get("/", (req, res) => {
@@ -17,8 +39,12 @@ app.get("/", (req, res) => {
 app.get("/loan-request", (req, res) => {
   res.render("loan-request", { sacco: "sam" });
 });
-app.get("/home", (req, res) => {
-  res.render("home", { sacco: "sam" });
+app.get("/home/:saccoId/:user", async (req, res) => {
+  let user_sacco = await saccoCollection.doc(req.params.saccoId).get();
+  let member = user_sacco.data().saccoMembers[
+    `member_${req.body.member_number}`
+  ];
+  res.render("home", { saccoData: user_sacco.data(), member });
 });
 app.get("/profile", (req, res) => {
   res.render("profile", { sacco: "sam" });
@@ -61,25 +87,6 @@ app.get("/pending-saccos", async (req, res) => {
   res.render("pending-saccos", { pending_saccos });
 });
 
-//db stuff
-admin.initializeApp(functions.config().firebase);
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-const db = admin.firestore();
-const saccoCollection = db.collection("saccos");
-
-//email transporter
-var transporter = nodemailer.createTransport({
-  service: "gmail",
-  host: "smtp.gmail.com",
-  auth: {
-    user: "mail.mysacco@gmail.com",
-    pass: "martha256",
-  },
-});
-//email transporter
 app.post("/api/new-sacco", async (req, res) => {
   let members = {};
   for (let i = 1; i <= parseInt(req.body.members_number); i++) {
@@ -168,6 +175,35 @@ app.put("/api/confirm/:id", (req, res) => {
 });
 //admin
 //user login
-
+app.post("/api/user/login", async (req, res) => {
+  try {
+    let user_sacco = await saccoCollection.doc(req.body.sacco_id).get();
+    if (!user_sacco.exists) {
+      res.send("Sacco Does Not Exist");
+      return;
+    } else if (user_sacco.data().confirmed != true) {
+      res.send("Sacco Not Confirmed");
+      return;
+    } else if (
+      !user_sacco.data().saccoMembers[`member_${req.body.member_number}`]
+    ) {
+      res.send("User Not Found");
+      return;
+    } else if (
+      user_sacco.data().saccoMembers[`member_${req.body.member_number}`]
+        .password != req.body.password
+    ) {
+      res.send("Wrong PassWord");
+      return;
+    } else {
+      res.send({
+        member_number: req.body.member_number,
+        sacco_id: req.body.sacco_id,
+      });
+    }
+  } catch (error) {
+    throw error;
+  }
+});
 //user login
 exports.app = functions.https.onRequest(app);
