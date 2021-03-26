@@ -17,6 +17,21 @@
      if (document.referrer == "") {
         self.location = "/";
       }
+      let info;
+      if(localStorage.getItem('info')){
+        info = JSON.parse(localStorage.getItem('info'));
+      }else{
+        self.location = "/";
+      }
+      document.addEventListener('DOMContentLoaded',()=>{
+        function _insData(member,cp,sacco){
+          if(cp == true){
+            //cp
+          }else{
+            //not cp
+          }
+        }
+      })
   </script>
   <style>
     .sidebar {
@@ -420,6 +435,20 @@
   <script src=" https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
+
+    <script>
+      
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET',`/api/user/${info.sacco_id}/${info.member_number}`,true);
+      xhr.send();
+      xhr.onreadystatechange = ()=>{
+        if(xhr.readyState == 4 && xhr.status == 200){
+          console.log(JSON.parse(xhr.responseText));
+          let _inData = JSON.parse(xhr.responseText);
+          
+        }
+      }
+    </script>
   <!-- End Scripts -->
 </body>
 

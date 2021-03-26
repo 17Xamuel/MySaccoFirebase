@@ -241,6 +241,36 @@ app.post("/api/user/login", async (req, res) => {
 });
 //user login
 
+//user data for home page
+app.get("/api/user/:saccoId/:memberId", async (req, res) => {
+  try {
+    let user_sacco = await saccoCollection.doc(req.params.saccoId).get();
+    let user_savings = await saccoCollection
+      .doc(`${req.params.saccoId}_${req.params.memberId}`)
+      .get();
+    let user_loans = await saccoCollection
+      .doc(`${req.params.saccoId}_${req.params.memberId}`)
+      .get();
+    let user_member = user_sacco.data().saccoMembers[
+      `member_${req.params.memberId}`
+    ];
+    let cp = req.params.memberId == 1 ? true : false;
+    let user_sacco_data = user_sacco.data();
+    let user_loans_data = user_loans.data() || null;
+    let user_savings_data = user_savings.data() || null;
+    res.send({
+      cp,
+      user_member,
+      user_sacco_data,
+      user_savings_data,
+      user_loans_data,
+    });
+  } catch (error) {
+    res.send("An error happened");
+  }
+});
+//user data for home page
+
 //savings
 //api function
 function apiGetSaving(number, amount) {
