@@ -68,6 +68,9 @@
             opacity: 0;
             transition: all 0.3s ease-in-out;
         }
+        .wait{
+            display: none;
+        }
         @media screen and (max-width: 768px) {
             .sacco-form {
                 width: 95%;
@@ -136,6 +139,9 @@
                             <span class="mdc-button__label">Login</span>
                             <i class="material-icons mdc-button__icon" aria-hidden="true">navigate_next</i>
                         </button>
+                        <div class="wait">
+                            Please Wait...
+                        </div>
                     </div>
                 </form>
                 <div class="basic-info b-ctr">
@@ -156,9 +162,10 @@
     </div>
     <script src="index.js"></script>
     <script>
-                let loginForm = document.querySelector('#login_form');
+        let loginForm = document.querySelector('#login_form');
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
+             document.querySelector('.wait').style.display = 'block';
             let formData = new FormData(loginForm);
             let req = {};
             formData.forEach((value, key) => {
@@ -166,12 +173,12 @@
             });  
                 let xhr = new XMLHttpRequest();
                 xhr.open("POST", '/api/user/login', true);
-                xhr.setRequestHeader("Content-type", "application/json");
-                xhr.send(JSON.stringify(req));
                 xhr.onreadystatechange = () => {
                     if (xhr.status == 200 && xhr.readyState == 4) {
+                        document.querySelector('.wait').style.display = 'none';
                         if(xhr.responseText == 'Sacco Does Not Exist' ||
-                        xhr.responseText =="Sacco Not Confirmed"){
+                        xhr.responseText == "Sacco Not Confirmed" ||
+                        xhr.responseText == "Not The Saving Day"){
                             document.querySelector('.failed_message_s').style.opacity = 
                                 '0.9';
                             document.querySelector('.failed_message_s').innerHTML = 
@@ -197,10 +204,13 @@
                             },10000)
                         }else{
                             localStorage.setItem('info',xhr.responseText);
+                            let res = JSON.parse(xhr.responseText);
                             window.location.assign(`/home`);
                         }
                     }
                 }
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.send(JSON.stringify(req));
             });
     </script>
 </body>

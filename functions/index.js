@@ -20,6 +20,8 @@ app.use(express.urlencoded({ extended: false }));
 
 const db = admin.firestore();
 const saccoCollection = db.collection("saccos");
+const savingsCollection = db.collection("savings");
+const loansCollection = db.collection("loans");
 //db stuff
 //email transporter
 var transporter = nodemailer.createTransport({
@@ -60,7 +62,7 @@ app.get("/register", (req, res) => {
 });
 //routes
 
-app.get("", (req, res) => {
+app.get("/admin", (req, res) => {
   res.render("admin");
 });
 app.get("/saccos", (req, res) => {
@@ -174,12 +176,48 @@ app.put("/api/confirm/:id", (req, res) => {
 app.post("/api/user/login", async (req, res) => {
   try {
     let user_sacco = await saccoCollection.doc(req.body.sacco_id).get();
+    function timeConfig(saccoData) {
+      let dateRef = new Date();
+      let day = saccoData.meetingDay,
+        numberDay;
+      switch (day) {
+        case "Sunday":
+          numberDay = 0;
+          break;
+        case "Monday":
+          numberDay = 1;
+          break;
+        case "Tuesday":
+          numberDay = 2;
+          break;
+        case "Wednesday":
+          numberDay = 3;
+          break;
+        case "Thursday":
+          numberDay = 4;
+          break;
+        case "Friday":
+          numberDay = 5;
+          break;
+        case "Saturday":
+          numberDay = 6;
+          break;
+        default:
+          numberDay = 6;
+          break;
+      }
+      if (dateRef.getDay() != numberDay) {
+        return false;
+      }
+    }
     if (!user_sacco.exists) {
       res.send("Sacco Does Not Exist");
       return;
     } else if (user_sacco.data().confirmed != true) {
       res.send("Sacco Not Confirmed");
       return;
+    } else if (timeConfig(user_sacco.data()) == false) {
+      res.send("Not The Saving Day");
     } else if (
       !user_sacco.data().saccoMembers[`member_${req.body.member_number}`]
     ) {
@@ -204,6 +242,87 @@ app.post("/api/user/login", async (req, res) => {
 //user login
 
 //savings
-
+//api function
+function apiGetSaving(number, amount) {
+  /**
+   * this function will take in the mobile number
+   * and the amount to be saved.
+   * These will later be sent to the MTN mobile Money Api
+   * and a transaction will be made.
+   *
+   * Afterward, its will return the amount and transction Id
+   */
+  return { transactionId: "generatedByMtn", saved: amount };
+}
+app.post("/api/user/save", async (req, res) => {
+  //api
+  let apiResult = apiGetSaving(req.body.mobile_number, req.body.save_amount);
+  if (apiResult != false) {
+    try {
+      let savingId = `${req.body.sacco_id}_${req.body.member_number}`;
+      let user_savings = await savingsCollection.doc(savingId).get();
+      if (!user_savings.exists) {
+        await savingsCollection.doc(savingId).set({
+          sacco_id: req.body.sacco_id,
+          member_id: req.body.member_number,
+          savings: [{ date: Date.now(), amount: apiResult.saved }],
+        });
+      } else {
+        let savings = user_savings.data().savings;
+        savings.push({ date: Date.now(), amount: apiResult.amount });
+        await savingsCollection.doc(savingId).set({
+          sacco_id: req.body.sacco_id,
+          member_id: req.body.member_number,
+          savings,
+        });
+      }
+      res.send("saved");
+    } catch (error) {
+      throw error;
+    }
+  } else {
+    res.send("error on api request");
+  }
+  //api
+});
+//api function
 //savings
+
+//loans
+app.post("/api/user/loan", async (req, res) => {
+  try {
+    let loanId = `${req.body.sacco_id}_${req.body.member_number}`;
+    let user_loans = await loansCollection.doc(loanId).get();
+    if (!user_loans.exists) {
+      await loansCollection.doc(loanId).set({
+        sacco_id: req.body.sacco_id,
+        member_id: req.body.member_number,
+        loans: [
+          {
+            date: Date.now(),
+            loanAmount: req.body.loan_amount,
+            loanStatus: "pending",
+          },
+        ],
+      });
+    } else {
+      let loans = user_loans.data().loans;
+      loans.push({
+        date: Date.now(),
+        loanAmount: req.body.loan_amount,
+        loanStatus: "pending",
+      });
+      await loansCollection.doc(loanId).set({
+        sacco_id: req.body.sacco_id,
+        member_id: req.body.member_number,
+        loans,
+      });
+    }
+    res.send("Loan Requested");
+  } catch (error) {
+    throw error;
+  }
+  //api
+});
+//loans
 exports.app = functions.https.onRequest(app);

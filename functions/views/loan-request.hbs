@@ -12,7 +12,12 @@
   <link rel="stylesheet" href="home.css" />
   <link rel="stylesheet" href="main.css" />
 
-  <title>MySacco :: Dashboard</title>
+  <title>MySacco :: Request For a loan</title>
+    <script>
+     if (document.referrer == "") {
+        self.location = "/";
+      }
+    </script>
   <style>
     .sidebar {
       background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)),
@@ -54,17 +59,16 @@
               </li>
               <li class="nav-item current">
                 <a href="/loan-request" class="nav-link text-white p-3 mb-2"><i
-                    class="fas fa-donate text-light fa-lg mr-3"></i>Request
-                  a Loan</a>
-              </li>
-
-              <li class="nav-item">
-                <a href="#" class="nav-link text-white p-3 mb-2"><i
-                    class="fas fa-wrench text-light fa-lg mr-3"></i>Chat</a>
+                    class="fas fa-donate text-light fa-lg mr-3"></i>Request a Loan
+                </a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link text-white p-3 mb-2"><i
-                    class="fas fa-arrow-up text-light fa-lg mr-3"></i>Details</a>
+                    class="fas fa-wrench text-light fa-lg mr-3"></i>Chat(Not Ready)</a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link text-white p-3 mb-2"><i
+                    class="fas fa-arrow-up text-light fa-lg mr-3"></i>Details(Not Ready)</a>
               </li>
               <li class="nav-item">
                 <a href="/profile" class="nav-link text-white p-3 mb-2"><i
@@ -134,7 +138,14 @@
           </button>
         </div>
         <div class="modal-body">
-          Your Request will be reviewed by the committee and the members.
+          Message: 
+          <span class="loan_request_message">
+            <i class="fas fa-spinner fa-spin"></i>
+          </span>
+          <br>
+          <span>
+            Your Request will be reviewed by the committee and the members.
+          </span>
         </div>
         <div class="modal-footer">
           <button type="button" data-dismiss="modal" class="btn btn-success">
@@ -162,26 +173,26 @@
               </div>
               <div class="card rounded my-2">
                 <div class="card-body">
-                  <form action="#">
-                    <div class="form-group">
-                      <label for="member-number"> Member Number </label>
-                      <input type="text" class="form-control" />
+                  <form id="loanForm">
+                     <div class="form-group">
+                      <label for="member-number"> Sacco Id </label>
+                      <input type="text" class="form-control" name="sacco_id"/>
                     </div>
                     <div class="form-group">
-                      <label for="name"> Member Name </label>
-                      <input type="text" class="form-control" />
+                      <label for="member-number"> Member ID </label>
+                      <input type="text" class="form-control" name="member_number"/>
                     </div>
                     <div class="form-group">
                       <label for="number"> Mobile Number </label>
-                      <input type="text" class="form-control" />
+                      <input type="text" class="form-control" name="mobile_number"/>
                     </div>
                     <div class="form-group">
                       <label for="amount">Loan Amount(UGX) </label>
-                      <input type="text" class="form-control" />
+                      <input type="text" class="form-control" name="loan_amount"/>
                     </div>
                     <div class="form-group">
                       <label for="amount">Reason For Your Loan</label>
-                      <textarea name="" class="form-control" rows="10"></textarea>
+                      <textarea name="loan_reason" class="form-control" rows="10"></textarea>
                     </div>
                     <div>
                       <button type="submit" class="btn btn-warning btn-block text-light" data-target="#-confirm-loan"
@@ -196,7 +207,7 @@
                 <div class="card-body">
                   <div class="sacco-config">
                     <h5>Save, For the future</h5>
-                    NB: Loan Request is not functioning
+                    NB: Your Loan Request Will Be confirmed First By ChairPerson
                   </div>
                 </div>
               </div>
@@ -252,6 +263,32 @@
   <script src=" https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
+    <script>
+      let _loan = document.querySelector('#loanForm');
+        _loan.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let formData = new FormData(_loan);
+            let req = {};
+            formData.forEach((value, key) => {
+                req[key] = value;
+            });  
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", '/api/user/loan', true);
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.send(JSON.stringify(req));
+                xhr.onreadystatechange = () => {
+                    if (xhr.status == 200 && xhr.readyState == 4) {
+                        document.querySelector('.loan_request_message').innerHTML = xhr.responseText;
+                         console.log(xhr.responseText);
+                         jQuery(document).ready(function(e) {
+                            $('#-confirm-loan').on('hidden.bs.modal', function () {
+                              window.location.assign('/home');
+                            })
+                          });
+                    }
+                }
+            });
+    </script>
   <!-- End Scripts -->
 </body>
 
