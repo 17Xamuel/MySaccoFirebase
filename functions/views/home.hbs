@@ -23,15 +23,6 @@
       }else{
         self.location = "/";
       }
-      document.addEventListener('DOMContentLoaded',()=>{
-        function _insData(member,cp,sacco){
-          if(cp == true){
-            //cp
-          }else{
-            //not cp
-          }
-        }
-      })
   </script>
   <style>
     .sidebar {
@@ -42,6 +33,9 @@
       height: 100vh;
       background-size: cover;
       box-shadow: 5px 7px 25px #999;
+    }
+    .operations{
+      display: none;
     }
   </style>
 </head>
@@ -65,7 +59,7 @@
                   height="50"
                   class="rounded-circle mr-3"
                 />
-              <a href="#" class="text-white">Hello, Xamuel</a>
+              <a href="#" class="text-white mbr"></a>
             </div>
             <ul class="navbar-nav flex-column mt-4">
               <li class="nav-item current">
@@ -90,9 +84,9 @@
                 <a href="#" class="nav-link text-white p-3 mb-2"><i
                     class="fas fa-arrow-up text-light fa-lg mr-3"></i>Details(Not Ready)</a>
               </li>
-              <li class="nav-item">
-                <a href="/profile" class="nav-link text-white p-3 mb-2"><i
-                    class="fas fa-user text-light fa-lg mr-3"></i>Profile</a>
+              <li class="nav-item operations">
+                <a href="/operations" class="nav-link text-white p-3 mb-2"><i
+                    class="fas fa-user text-light fa-lg mr-3"></i>Operations</a>
               </li>
             </ul>
           </div>
@@ -103,8 +97,11 @@
           <div class="col-xl-10 col-lg-9 col-md-8 bg-dark ml-auto fixed-top py-2 top-navbar">
             <div class="row align-items">
               <div class="col-md-4 mb-0 text-light py-3 text-uppercase">
-                <h4 style="display: inline">Xamuel - Dashboard</h4>
-                (LCS Sacco)
+                <h4 style="display: inline">
+                  <span class="mbr"></span>
+                  <span>-</span>
+                  <span class="sacco"></span>
+                </h4>
               </div>
               <div class="col-md-5"></div>
               <div class="col-md-3 py-2">
@@ -164,7 +161,7 @@
                     <i class="fas fa-shopping-bag fa-3x text-warning"></i>
                     <div class="text-right text-secondary">
                       <h4>Savings:</h4>
-                      <h3 id="orders">UGX 276,000</h3>
+                      <h3 id="savings">...</h3>
                     </div>
                   </div>
                 </div>
@@ -181,13 +178,13 @@
                     <i class="fas fa-table fa-3x text-success"></i>
                     <div class="text-right text-secondary">
                       <h4>Members</h4>
-                      <h3 id="products">35</h3>
+                      <h3 id="mbrs">...</h3>
                     </div>
                   </div>
                 </div>
                 <div class="card-footer text-secondary">
                   <i class="fas fa-sync mr-3"></i>
-                  <span>Update Now</span>
+                  <span>Updated</span>
                 </div>
               </div>
             </div>
@@ -244,11 +241,10 @@
                 <table class="table table-striped bg-light text-center">
                   <thead>
                     <tr class="text-muted">
-                      <th>OrderNumber</th>
-                      <th>OrderAmount</th>
-                      <th>DeliveryMethod</th>
-                      <th>Details</th>
-                      <th>Finish</th>
+                      <th>Member</th>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Mobile Number</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -312,15 +308,14 @@
               <div style="text-align: right"><b>See all</b></div>
             </div>
             <div class="col-xl-6 col-12">
-              <h4 class="text-muted mb-3 text-center">Recent Savings</h4>
+              <h4 class="text-muted mb-3 text-center">Your Loans</h4>
               <div class="table-ctr-sacco">
                 <table class="table table-dark table-hover text-center">
                   <thead>
                     <tr class="text-muted">
-                      <th>#</th>
-                      <th>Name</th>
-                      <th>Price</th>
-                      <th>Date</th>
+                      <th>Member</th>
+                      <th>Loan Amount</th>
+                      <th>Date Taken</th>
                       <th>Status</th>
                     </tr>
                   </thead>
@@ -445,7 +440,15 @@
         if(xhr.readyState == 4 && xhr.status == 200){
           console.log(JSON.parse(xhr.responseText));
           let _inData = JSON.parse(xhr.responseText);
-          
+          if(_inData.cp == true){
+            document.querySelector('.operations').style.display = 'block';
+          }
+          document.querySelectorAll('.mbr').forEach(el=>{
+            el.innerHTML = _inData.user_member.memberName; 
+          })
+          document.querySelector('.sacco').innerHTML = _inData.user_sacco_data.saccoName;
+          document.querySelector('#mbrs').innerHTML = 
+            Object.keys(_inData.user_sacco_data.saccoMembers).length;
         }
       }
     </script>

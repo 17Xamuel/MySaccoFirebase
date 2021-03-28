@@ -44,8 +44,8 @@ app.get("/loan-request", (req, res) => {
 app.get("/home", async (req, res) => {
   res.render("home");
 });
-app.get("/profile", (req, res) => {
-  res.render("profile", { sacco: "sam" });
+app.get("/operations", (req, res) => {
+  res.render("operations", { sacco: "sam" });
 });
 app.get("/save", (req, res) => {
   res.render("save", { sacco: "sam" });
@@ -299,7 +299,7 @@ app.post("/api/user/save", async (req, res) => {
         });
       } else {
         let savings = user_savings.data().savings;
-        savings.push({ date: Date.now(), amount: apiResult.amount });
+        savings.push({ date: Date.now(), amount: apiResult.saved });
         await savingsCollection.doc(savingId).set({
           sacco_id: req.body.sacco_id,
           member_id: req.body.member_number,
@@ -308,6 +308,7 @@ app.post("/api/user/save", async (req, res) => {
       }
       res.send("saved");
     } catch (error) {
+      console.log("error: ", error);
       throw error;
     }
   } else {
