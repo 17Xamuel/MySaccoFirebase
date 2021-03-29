@@ -44,9 +44,6 @@ app.get("/loan-request", (req, res) => {
 app.get("/home", async (req, res) => {
   res.render("home");
 });
-app.get("/operations", (req, res) => {
-  res.render("operations", { sacco: "sam" });
-});
 app.get("/save", (req, res) => {
   res.render("save", { sacco: "sam" });
 });

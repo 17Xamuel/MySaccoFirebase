@@ -34,9 +34,6 @@
       background-size: cover;
       box-shadow: 5px 7px 25px #999;
     }
-    .operations{
-      display: none;
-    }
   </style>
 </head>
 
@@ -83,10 +80,6 @@
               <li class="nav-item">
                 <a href="#" class="nav-link text-white p-3 mb-2"><i
                     class="fas fa-arrow-up text-light fa-lg mr-3"></i>Details(Not Ready)</a>
-              </li>
-              <li class="nav-item operations">
-                <a href="/operations" class="nav-link text-white p-3 mb-2"><i
-                    class="fas fa-user text-light fa-lg mr-3"></i>Operations</a>
               </li>
             </ul>
           </div>
@@ -195,7 +188,7 @@
                     <i class="fas fa-users fa-3x text-info"></i>
                     <div class="text-right text-secondary">
                       <h4>Total Box Savings:</h4>
-                      <h3 id="users-number">UGX 986,000</h3>
+                      <h3 id="users-number">...</h3>
                     </div>
                   </div>
                 </div>
@@ -212,7 +205,7 @@
                     <i class="fas fa-chart-line fa-3x text-danger"></i>
                     <div class="text-right text-secondary">
                       <h4>Loans Taken</h4>
-                      <h3>5</h3>
+                      <h3>...</h3>
                     </div>
                   </div>
                 </div>
@@ -440,9 +433,6 @@
         if(xhr.readyState == 4 && xhr.status == 200){
           console.log(JSON.parse(xhr.responseText));
           let _inData = JSON.parse(xhr.responseText);
-          if(_inData.cp == true){
-            document.querySelector('.operations').style.display = 'block';
-          }
           document.querySelectorAll('.mbr').forEach(el=>{
             el.innerHTML = _inData.user_member.memberName; 
           })
