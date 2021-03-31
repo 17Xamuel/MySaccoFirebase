@@ -4,6 +4,7 @@ const engines = require("consolidate");
 const admin = require("firebase-admin");
 const shortid = require("shortid");
 const nodemailer = require("nodemailer");
+const schedule = require("node-schedule");
 const { user } = require("firebase-functions/lib/providers/auth");
 const e = require("express");
 
@@ -92,10 +93,13 @@ app.post("/api/new-sacco", async (req, res) => {
       memberPhone: req.body[`member_phone_${i}`],
       confirmed: false,
       password: null,
+      member_savings: null,
+      member_loans: null,
     };
   }
   let saccoId = "Sacco-" + shortid.generate();
   let newSacco = {
+    sacco_savings: null,
     saccoId,
     confirmed: false,
     saccoName: req.body.sacco_name,
@@ -125,6 +129,11 @@ app.post("/api/new-sacco", async (req, res) => {
         throw err;
       }
     });
+    let date = new Date();
+    let newDate = new Date(
+      date.setMonth(date.getMonth() + parseInt(req.body.s_period))
+    );
+    schedule.scheduleJob(newDate, await getSaccoData(saccoId));
     res.render("registered-sacco");
   } catch (error) {
     res.status(400).send("An Error: " + error);
@@ -254,7 +263,7 @@ app.get("/api/user/:saccoId/:memberId", async (req, res) => {
     let cp = req.params.memberId == 1 ? true : false;
     let user_sacco_data = user_sacco.data();
     let user_loans_data = user_loans.data() || null;
-    let user_savings_data = user_savings.data() || null;
+    let user_savings_data = user_savings.data();
     res.send({
       cp,
       user_member,
@@ -286,23 +295,32 @@ app.post("/api/user/save", async (req, res) => {
   let apiResult = apiGetSaving(req.body.mobile_number, req.body.save_amount);
   if (apiResult != false) {
     try {
-      let savingId = `${req.body.sacco_id}_${req.body.member_number}`;
-      let user_savings = await savingsCollection.doc(savingId).get();
-      if (!user_savings.exists) {
-        await savingsCollection.doc(savingId).set({
-          sacco_id: req.body.sacco_id,
-          member_id: req.body.member_number,
-          savings: [{ date: Date.now(), amount: apiResult.saved }],
-        });
+      let user_sacco = await saccoCollection.doc(req.body.sacco_id).get();
+      let user_member = user_sacco.data().saccoMembers[
+        `member_${req.body.member_number}`
+      ];
+      let sacco_savings = user_sacco.data().saccoSavings || 0;
+      if (
+        user_member.member_savings == null ||
+        user_member.member_savings == undefined
+      ) {
+        user_member.member_savings = [
+          { date: Date.now(), amount: apiResult.saved },
+        ];
+        sacco_savings += parseInt(apiResult.saved);
       } else {
-        let savings = user_savings.data().savings;
-        savings.push({ date: Date.now(), amount: apiResult.saved });
-        await savingsCollection.doc(savingId).set({
-          sacco_id: req.body.sacco_id,
-          member_id: req.body.member_number,
-          savings,
+        user_member.member_savings.push({
+          date: Date.now(),
+          amount: apiResult.saved,
         });
+        sacco_savings += parseInt(apiResult.saved);
       }
+      let user_sacco_data = user_sacco.data();
+      user_sacco_data.saccoMembers[
+        `member_${req.body.member_number}`
+      ] = user_member;
+      user_sacco_data.saccoSavings = sacco_savings;
+      await saccoCollection.doc(req.body.sacco_id).set(user_sacco_data);
       res.send("saved");
     } catch (error) {
       console.log("error: ", error);
@@ -353,4 +371,43 @@ app.post("/api/user/loan", async (req, res) => {
   //api
 });
 //loans
+async function getSaccoData(i) {
+  let sacco = await saccoCollection.doc(i).get();
+  _disburs(sacco.data());
+}
+//this function does the disbursment after the sacco period
+function _disburs(sacco_data) {
+  let members = sacco_data.saccoMembers;
+  members.forEach((member) => {
+    let total_savings = 0;
+    let savings = member.member_savings;
+    if (savings != null || savings != undefined) {
+      savings.forEach((saving) => {
+        total_savings += parseInt(saving.amount);
+      });
+    }
+    apiDisburse(member.memberPhone, total_savings);
+  });
+}
+//this function does the disbursment after the sacco period
+
+/*
+this function below makes the disbursment of money to member mobile accounts after
+the sacco period
+*/
+function apiDisburse(number, amount) {
+  /**
+   * this function will take in the mobile number
+   * and the amount to be saved.
+   * These will later be sent to the MTN mobile Money Api
+   * a disbursment will be done
+   *
+   * Afterward, its will return true if the transaction was successfull
+   */
+  return { transactionId: "generatedByMtn", recieved: true };
+}
+/*
+this function makes the disbursment of money to member mobile accounts after
+the sacco period
+*/
 exports.app = functions.https.onRequest(app);

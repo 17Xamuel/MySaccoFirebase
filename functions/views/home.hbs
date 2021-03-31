@@ -69,8 +69,8 @@
                     class="fas fa-shopping-cart text-light fa-lg mr-3"></i>Save</a>
               </li>
               <li class="nav-item">
-                <a href="/loan-request" class="nav-link text-white p-3 mb-2"><i
-                    class="fas fa-chart-line text-light fa-lg mr-3"></i>Request a Loan</a>
+                <a href="#" class="nav-link text-white p-3 mb-2"><i
+                    class="fas fa-chart-line text-light fa-lg mr-3"></i>Loans(Not Ready)</a>
               </li>
 
               <li class="nav-item">
@@ -188,7 +188,7 @@
                     <i class="fas fa-users fa-3x text-info"></i>
                     <div class="text-right text-secondary">
                       <h4>Total Box Savings:</h4>
-                      <h3 id="users-number">...</h3>
+                      <h3 id="_ttbx">...</h3>
                     </div>
                   </div>
                 </div>
@@ -205,7 +205,7 @@
                     <i class="fas fa-chart-line fa-3x text-danger"></i>
                     <div class="text-right text-secondary">
                       <h4>Loans Taken</h4>
-                      <h3>...</h3>
+                      <h3>Not Ready</h3>
                     </div>
                   </div>
                 </div>
@@ -235,68 +235,16 @@
                   <thead>
                     <tr class="text-muted">
                       <th>Member</th>
-                      <th>Date</th>
+                      <th>Time</th>
                       <th>Amount</th>
                       <th>Mobile Number</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <th>1</th>
-                      <td>Hakim</td>
-                      <td>UGX100,000</td>
-                      <td>23/07/2020</td>
-                      <td>
-                        <span class="badge badge-success w-75 py-2">Approved</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>2</th>
-                      <td>Rodger</td>
-                      <td>UGX600,000</td>
-                      <td>23/07/2020</td>
-                      <td>
-                        <span class="badge badge-success w-75 py-2">Approved</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>3</th>
-                      <td>Mary</td>
-                      <td>UGX340,000</td>
-                      <td>23/07/2020</td>
-                      <td>
-                        <span class="badge badge-danger w-75 py-2">Pending</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>4</th>
-                      <td>Cynthia</td>
-                      <td>UGX453,000</td>
-                      <td>13/07/2020</td>
-                      <td>
-                        <span class="badge badge-success w-75 py-2">Approved</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>5</th>
-                      <td>Daisy</td>
-                      <td>UGX1,000,000</td>
-                      <td>23/07/2020</td>
-                      <td>
-                        <span class="badge badge-danger w-75 py-2">Pending</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>6</th>
-                      <td>Emmanuel</td>
-                      <td>UGX260,000</td>
-                      <td>23/07/2020</td>
-                      <td>
-                        <span class="badge badge-danger w-75 py-2">Pending</span>
-                      </td>
-                    </tr>
+                  <tbody id="_savingsDom"> 
+                        
                   </tbody>
                 </table>
+
               </div>
               <div style="text-align: right"><b>See all</b></div>
             </div>
@@ -313,62 +261,9 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <th>1</th>
-                      <td>Hakim</td>
-                      <td>UGX100,000</td>
-                      <td>23/07/2020</td>
-                      <td>
-                        <span class="badge badge-success w-75 py-2">Approved</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>2</th>
-                      <td>Rodger</td>
-                      <td>UGX600,000</td>
-                      <td>23/07/2020</td>
-                      <td>
-                        <span class="badge badge-success w-75 py-2">Approved</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>3</th>
-                      <td>Mary</td>
-                      <td>UGX340,000</td>
-                      <td>23/07/2020</td>
-                      <td>
-                        <span class="badge badge-danger w-75 py-2">Pending</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>4</th>
-                      <td>Cynthia</td>
-                      <td>UGX453,000</td>
-                      <td>13/07/2020</td>
-                      <td>
-                        <span class="badge badge-success w-75 py-2">Approved</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>5</th>
-                      <td>Daisy</td>
-                      <td>UGX1,000,000</td>
-                      <td>23/07/2020</td>
-                      <td>
-                        <span class="badge badge-danger w-75 py-2">Pending</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>6</th>
-                      <td>Emmanuel</td>
-                      <td>UGX260,000</td>
-                      <td>23/07/2020</td>
-                      <td>
-                        <span class="badge badge-danger w-75 py-2">Pending</span>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
+                 <b>Loans, Not Ready</b>
               </div>
               <div style="text-align: right"><b>See all</b></div>
             </div>
@@ -439,8 +334,42 @@
           document.querySelector('.sacco').innerHTML = _inData.user_sacco_data.saccoName;
           document.querySelector('#mbrs').innerHTML = 
             Object.keys(_inData.user_sacco_data.saccoMembers).length;
+            let savings = _inData.user_member.member_savings;
+            let total_savings = 0;
+            let _savingsDom = "";
+            function getDate(date){
+              let newDate = new Date(date);
+              return `${newDate.getDate()}/${newDate.getMonth() + 1}/${newDate.getFullYear()}`;
+            }
+            function getTime(date){
+              let newTime = new Date(date);
+              return `${newDate.getDate()}/${newDate.getMonth() + 1}/${newDate.getFullYear()}`;
+            }
+            if(savings != null || savings != undefined){
+              savings.forEach(saving=>{
+               total_savings += parseInt(saving.amount);
+               _savingsDom +=`
+                <tr>
+                  <th>${_inData.user_member.memberId}</th>
+                  <td>${getDate(saving.date)}</td>
+                  <td>${getDate(saving.date)}</td>
+                  <td>UGX ${saving.amount}</td>
+                </tr>
+               `;
+              })
+            }else{
+              _savingsDom = "No Savings Yet"
+            }
+            document.querySelector('#_savingsDom').innerHTML = _savingsDom;
+            document.querySelector('#savings').innerHTML = `UGX ${total_savings}`;
+            document.querySelector('#_ttbx').innerHTML = 
+              `UGX ${_inData.user_sacco_data.saccoSavings}`;;
         }
       }
+      document.querySelector('#alg').addEventListener('click',()=>{
+        localStorage.removeItem('info');
+        window.location.reload();
+      })
     </script>
   <!-- End Scripts -->
 </body>

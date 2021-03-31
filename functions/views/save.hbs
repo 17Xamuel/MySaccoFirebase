@@ -269,6 +269,13 @@
                 xhr.onreadystatechange = () => {
                     if (xhr.status == 200 && xhr.readyState == 4) {
                          console.log(xhr.responseText);
+                         if(xhr.responseText == "saved"){
+                            jQuery(document).ready(function(e) {
+                            $('#save-modal').on('hidden.bs.modal', function () {
+                              window.location.assign('/home');
+                            })
+                          });
+                         }
                     }
                 }
             });

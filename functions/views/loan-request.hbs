@@ -279,7 +279,7 @@
                 xhr.onreadystatechange = () => {
                     if (xhr.status == 200 && xhr.readyState == 4) {
                         document.querySelector('.loan_request_message').innerHTML = xhr.responseText;
-                         console.log(xhr.responseText);
+                       
                          jQuery(document).ready(function(e) {
                             $('#-confirm-loan').on('hidden.bs.modal', function () {
                               window.location.assign('/home');
